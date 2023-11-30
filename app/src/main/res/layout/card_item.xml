@@ -8,8 +8,11 @@
 
     <ImageView
         android:id="@+id/cardImage"
-        android:layout_width="56dp"
-        android:layout_height="87dp"
+        android:layout_width="57dp"
+        android:layout_height="86dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="2dp"
+        android:cropToPadding="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/spades_1" />

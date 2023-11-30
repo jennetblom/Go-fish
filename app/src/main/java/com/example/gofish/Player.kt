@@ -1,6 +1,6 @@
 package com.example.gofish
 
-class Player (val name:String, private val carddeck: Carddeck){
+open class Player (val name:String){
     var hand = mutableListOf<Card>()
     var score = 0
 
@@ -20,5 +20,4 @@ class Player (val name:String, private val carddeck: Carddeck){
             score+=count/2
         }
     }
-
 }
