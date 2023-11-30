@@ -3,7 +3,10 @@ package com.example.gofish
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var seaCard8 : ImageView
     lateinit var seaCard9 : ImageView
     lateinit var seaCard10 : ImageView
+
 
 
 
@@ -75,6 +79,36 @@ class MainActivity : AppCompatActivity() {
          recyclerView1 = findViewById(R.id.recyclerView1)
          recyclerView2 = findViewById(R.id.recyclerView2)
 
+        val chatBubble1 = findViewById<ImageView>(R.id.chatBubble1)
+        val chatBubble2 = findViewById<ImageView>(R.id.chatBubble2)
+        var chatBubbleText1 = findViewById<TextView>(R.id.player1textView)
+        var chatBubbleText2 = findViewById<TextView>(R.id.player2textView)
+
+
+
+        var showImage = false
+
+        seaCard1.setOnClickListener {
+
+
+
+
+            if(showImage!=true){
+            chatBubble1.setImageResource(R.drawable.chaticon4)
+            chatBubble2.setImageResource(R.drawable.chaticon4)
+                chatBubble1.visibility = View.VISIBLE
+                chatBubble2.visibility = View.VISIBLE
+                chatBubbleText1.text = "Do you have any 6's?"
+                chatBubbleText2.text = "Nope"
+                showImage=true
+        } else if (showImage){
+            chatBubble1.visibility = View.GONE
+                chatBubble2.visibility = View.GONE
+                showImage=false
+            }
+
+
+        }
 
 
 
@@ -87,13 +121,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
         addPlayer1Fragment()
         addPlayer2Fragment()
-
-
-
-
 
 
         for(card in player1.hand){
@@ -101,10 +130,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         placeCardsInSea()
-
-
-
-
 
     }
     fun addPlayer1Fragment(){
@@ -133,11 +158,5 @@ class MainActivity : AppCompatActivity() {
         seaCard9.setImageResource(carddeck.cardpile.get(8).faceDownImage)
         seaCard10.setImageResource(carddeck.cardpile.get(9).faceDownImage)
 
-
     }
-
-
-
-
-
 }

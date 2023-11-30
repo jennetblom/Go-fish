@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class CardAdapter(val context: Context,  val carddeck: List<Card>):
@@ -23,6 +24,7 @@ RecyclerView.Adapter<CardAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val card = carddeck[position]
+        holder.cardPosition = position
 
         if(card.isFaceUp){
             holder.cardImage.setImageResource(card.faceUpImage)
@@ -34,5 +36,14 @@ RecyclerView.Adapter<CardAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         val cardImage:ImageView = itemView.findViewById<ImageView>(R.id.cardImage)
+
+        var cardPosition = 0
+
+        init{
+            cardImage.setOnClickListener {
+
+
+            }
+        }
     }
 }
