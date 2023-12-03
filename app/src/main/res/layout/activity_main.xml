@@ -34,8 +34,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView2"
-        android:layout_width="260dp"
-        android:layout_height="78dp"
+        android:layout_width="290dp"
+        android:layout_height="83dp"
         android:layout_marginTop="116dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.57"
@@ -169,7 +169,7 @@
 
     <ImageView
         android:id="@+id/chatBubble2"
-        android:layout_width="90dp"
+        android:layout_width="98dp"
         android:layout_height="78dp"
         android:layout_marginStart="12dp"
         app:layout_constraintStart_toEndOf="@+id/containerPlayer2"
@@ -197,5 +197,23 @@
         app:layout_constraintStart_toEndOf="@+id/containerPlayer2"
         app:layout_constraintTop_toTopOf="@+id/chatBubble2"
         tools:text="Do you have any 8's?" />
+
+    <TextView
+        android:id="@+id/goFishTextView"
+        android:layout_width="240dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="100dp"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="10"
+        android:shadowRadius="3"
+        android:text="GO FISH!"
+        android:textAlignment="center"
+        android:textColor="#A30A0A"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.543"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

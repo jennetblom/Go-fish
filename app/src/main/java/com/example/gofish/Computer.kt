@@ -7,10 +7,6 @@ class Computer(name: String) : Player(name) {
 
 }
 fun selectCardToChoose(carddeck: Carddeck):Card?{
-    if(carddeck.cardpile.isEmpty())
-    {
-        return null
-    }
 
     val random = Random()
     val randomCardIndex = random.nextInt(carddeck.cardpile.size)
