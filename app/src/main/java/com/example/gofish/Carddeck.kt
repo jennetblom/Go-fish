@@ -26,6 +26,32 @@ class Carddeck {
         }
         return cardpile.removeAt(0)
     }
+    fun countPars():Int{
+        var pairs = 0
+        for(card1 in 0 until cardpile.size){
+            for(card2 in card1+1 until cardpile.size){
+                if(cardpile[card1].value==cardpile[card2].value)
+                    pairs++
+            }
+        }
+        return pairs
+    }
+    fun findAndRemovePairs(player : Player):List<Pair<Card,Card>>{
+        val pairs = mutableListOf<Pair<Card,Card>>()
+        val toRemove = mutableListOf<Card>()
+        for(card1 in 0 until player.hand.size){
+            for(card2 in card1+1 until player.hand.size){
+                if(player.hand[card1].value==player.hand[card2].value){
+                    pairs.add(Pair(player.hand[card1],player.hand[card2]))
+                    toRemove.add(player.hand[card1])
+                    toRemove.add(player.hand[card2])
+                    player.score++
+                }
+            }
+        }
+        player.hand.removeAll(toRemove)
+        return pairs
+    }
 
     fun iniatializeCards(){
         cardpile.add(Card("Hearts",1,false,R.drawable.hearts_1, R.drawable.facedown))

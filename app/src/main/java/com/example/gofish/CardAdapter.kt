@@ -45,15 +45,19 @@ RecyclerView.Adapter<CardAdapter.ViewHolder>() {
         }
     }
 
+    fun removeItem(position: Int): Card {
+        val removedCard = handCards.removeAt(position)
+        notifyItemRemoved(position)
+        return removedCard
+    }
+
+    fun addItem(card: Card, position: Int = handCards.size) {
+        handCards.add(position, card)
+        notifyItemInserted(position)
+    }
+
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
         val cardImage: ImageView = itemView.findViewById<ImageView>(R.id.cardImage)
 
-    }
-    fun updateData(newData: List<Card>){
-
-        Log.d("new","New data size: $newData.size")
-        handCards.clear()
-        handCards.addAll(newData)
-        notifyDataSetChanged()
     }
     }

@@ -10,12 +10,11 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-class MainActivity : AppCompatActivity() , CardClickListener {
+class MainActivity : AppCompatActivity() , CardClickListener  {
 
 
     lateinit var cardAdapter1: CardAdapter
@@ -27,8 +26,9 @@ class MainActivity : AppCompatActivity() , CardClickListener {
 
     val player1 = Human("Human")
     val player2 = Computer("Computer")
-    var currentPlayer : Player =  player1
-    var otherPlayer : Player = player2
+    var currentPlayer: Player = player1
+    var otherPlayer: Player = player2
+
     lateinit var seaCard1: ImageView
     lateinit var seaCard2: ImageView
     lateinit var seaCard3: ImageView
@@ -44,7 +44,14 @@ class MainActivity : AppCompatActivity() , CardClickListener {
     lateinit var chatBubble2: ImageView
     lateinit var chatBubbleText1: TextView
     lateinit var chatBubbleText2: TextView
-    lateinit var goFishText : TextView
+    lateinit var goFishText: TextView
+    lateinit var showCard1: ImageView
+
+    lateinit var player1score: TextView
+    lateinit var player2score : TextView
+    var isClickable : Boolean = true
+    var seaCardsClickable : Boolean = true
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +71,9 @@ class MainActivity : AppCompatActivity() , CardClickListener {
         seaCard10 = findViewById(R.id.seaCard10)
         goFishText = findViewById(R.id.goFishTextView)
         goFishText.visibility = View.GONE
+        showCard1 = findViewById(R.id.showCard1)
+        player1score = findViewById(R.id.player1score)
+        player2score = findViewById(R.id.player2score)
 
 
         val roundImage = findViewById<ImageView>(R.id.roundOceanImage)
@@ -73,10 +83,12 @@ class MainActivity : AppCompatActivity() , CardClickListener {
 
         val players = listOf(player1, player2)
         carddeck.dealCardsToPlayers(players)
-        carddeck.dealCardsToPlayers(players)
 
 
 
+
+        player1score.text = player1.showScore()
+        player2score.text = player2.showScore()
 
 
 
@@ -84,15 +96,20 @@ class MainActivity : AppCompatActivity() , CardClickListener {
         Log.d("!!!", carddeck.cardpile.size.toString())
 
 
-         cardAdapter1 = CardAdapter(this, player1.hand, this, true)
-         cardAdapter2 = CardAdapter(this, player2.hand, this, false)
+        cardAdapter1 = CardAdapter(this, player1.hand, this, true)
+        cardAdapter2 = CardAdapter(this, player2.hand, this, false)
 
 
         recyclerView1 = findViewById(R.id.recyclerView1)
         recyclerView2 = findViewById(R.id.recyclerView2)
 
+        recyclerView1.itemAnimator = CardTransferAnimator()
+        recyclerView2.itemAnimator = CardTransferAnimator()
+
         chatBubble1 = findViewById<ImageView>(R.id.chatBubble1)
         chatBubble2 = findViewById<ImageView>(R.id.chatBubble2)
+        chatBubble1.visibility = View.GONE
+        chatBubble2.visibility = View.GONE
         chatBubbleText1 = findViewById<TextView>(R.id.player1textView)
         chatBubbleText2 = findViewById<TextView>(R.id.player2textView)
 
@@ -109,9 +126,6 @@ class MainActivity : AppCompatActivity() , CardClickListener {
 
 
 
-        addPlayer1Fragment()
-        addPlayer2Fragment()
-
 
         for (card in player1.hand) {
             card.flipCardUp()
@@ -122,109 +136,291 @@ class MainActivity : AppCompatActivity() , CardClickListener {
 
         placeCardsInSea()
 
+        for(player in players){
 
-
+            player.showScore()
+            updateRecyclerView()
+            Handler(Looper.getMainLooper()).postDelayed({
+                // Code to be executed after 3 seconds
+            }, 1500)
+            updateRecyclerView()
+        }
+        player1score.text = player1.showScore()
+        player2score.text = player2.showScore()
 
 
     }
 
+    override fun onResume() {
+        super.onResume()
 
-    fun addPlayer1Fragment() {
-
-        val player1Fragment = Player1Fragment()
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.containerPlayer1, player1Fragment, "player1Fragment")
-        transaction.commit()
     }
+    fun switchPlayers(){
+        currentPlayer = if(currentPlayer==player1) player2 else player1
+        otherPlayer = if(currentPlayer==player1) player2 else player1
 
-    fun addPlayer2Fragment() {
+        if(currentPlayer==player2){
 
-        val player2Fragment = Player2Fragment()
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.containerPlayer2, player2Fragment, "player2Fragment")
-        transaction.commit()
+          val selectedCard = player2.selectCardToChoose(player2.hand)
+            if(selectedCard!=null) {
+                askOtherPlayer(selectedCard.value)
+            }
+
+        }
     }
 
     fun placeCardsInSea() {
 
         val seaCardViews = listOf(
-            seaCard1, seaCard2, seaCard3, seaCard4, seaCard5, seaCard6, seaCard7, seaCard8, seaCard9, seaCard10
+            seaCard1,
+            seaCard2,
+            seaCard3,
+            seaCard4,
+            seaCard5,
+            seaCard6,
+            seaCard7,
+            seaCard8,
+            seaCard9,
+            seaCard10
         )
 
-        for(i in seaCardViews.indices){
-            if(i < carddeck.cardpile.size){
+        for (i in seaCardViews.indices) {
+            if (i < carddeck.cardpile.size) {
                 seaCardViews[i].setImageResource(carddeck.cardpile[i].faceDownImage)
-            }
-            else{
+            } else {
                 seaCardViews[i].visibility = View.GONE
             }
         }
     }
 
-    override fun onCardClick(position: Int, cardValue : Int) {
+    fun updateScore(){
 
-       askOtherPlayer(cardValue)
+        Handler(Looper.getMainLooper()).postDelayed({
+            // Code to be executed after 3 seconds
+            val players = listOf(player1,player2)
+            for(player in players){
+                carddeck.findAndRemovePairs(player)
+                player.showScore()
+                updateRecyclerView()
+            }
+            player1score.text = player1.showScore()
+            player2score.text = player2.showScore()
+            updateRecyclerView()
+        }, 2000)
+
     }
-    fun askOtherPlayer(cardValue: Int){
 
+    override fun onCardClick(position: Int, cardValue: Int) {
+
+        Log.d("!!!", "isClickable: $isClickable")
+        if(isClickable) {
+            askOtherPlayer(cardValue)
+            isClickable = answerOtherPlayer(cardValue)
+        }
+
+    }
+
+    fun askOtherPlayer(cardValue: Int) {
+
+
+        Log.d("!!!"," Cardvalue : $cardValue")
         chatBubble1.setImageResource(R.drawable.chaticon4)
         chatBubble2.setImageResource(R.drawable.chaticon4)
         chatBubble1.visibility = View.VISIBLE
         chatBubble2.visibility = View.VISIBLE
 
-        val askingPlayerText : TextView
-        val otherPlayerText : TextView
-        if(currentPlayer==player1){
+        val askingPlayerText: TextView
+        val answerPlayerText: TextView
+
+        if (currentPlayer == player1) {
             askingPlayerText = chatBubbleText1
-            otherPlayerText = chatBubbleText2
-        }else{
-            askingPlayerText=chatBubbleText2
-            otherPlayerText = chatBubbleText1
+            answerPlayerText = chatBubbleText2
+        } else {
+            askingPlayerText = chatBubbleText2
+            answerPlayerText = chatBubbleText1
         }
         askingPlayerText.text = "Do you have $cardValue?"
 
 
-        val hasCard = otherPlayer.hand.any{
-            it.value == cardValue
-        }
-        if(hasCard){
-            otherPlayerText.text = "YES"
-            otherPlayer.giveCard(currentPlayer, cardValue)
-            updateRecyclerView()
-        }
-        else{
-            otherPlayerText.text = "No sorry! Go fish!"
+    }
+    fun answerOtherPlayer(cardValue: Int) : Boolean {
 
+        val askingPlayerText: TextView
+        val answerPlayerText: TextView
+
+        if (currentPlayer == player1) {
+            askingPlayerText = chatBubbleText1
+            answerPlayerText = chatBubbleText2
+        } else {
+            askingPlayerText = chatBubbleText2
+            answerPlayerText = chatBubbleText1
+        }
+
+            val hasCard = otherPlayer.hand.any {
+                it.value == cardValue
+            }
+
+            if (hasCard) {
+                answerPlayerText.text = "YES"
+                var card = otherPlayer.giveCard(currentPlayer, cardValue)
+                if (card != null) {
+                    animateShowCard(card)
+                }
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    // Code to be executed after 3 seconds
+                    updateRecyclerView()
+                }, 1500)
+
+            } else if(!hasCard){
+                answerPlayerText.text = "No sorry! Go fish!"
+
+                animateCard()
+                seaCardsClickable=true
+                goFish()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    // Code to be executed after 3 seconds
+                    goFishText.visibility = View.VISIBLE
+                }, 1500)
+
+            }
+        Log.d("!!!", "has it run?")
+        updateScore()
+        return hasCard
+        }
+
+
+    fun updateRecyclerView() {
+        cardAdapter1.notifyDataSetChanged()
+        cardAdapter2.notifyDataSetChanged()
+    }
+
+    fun animateCard() {
+
+        val seaCardViews = listOf(
+            seaCard1,
+            seaCard2,
+            seaCard3,
+            seaCard4,
+            seaCard5,
+            seaCard6,
+            seaCard7,
+            seaCard8,
+            seaCard9,
+            seaCard10
+        )
+
+        for (seaCardView in seaCardViews) {
+
+            val moveUpAnimator = ObjectAnimator.ofFloat(seaCardView, "translationY", -100f, 0f)
+            moveUpAnimator.duration = 1000
+            val moveDownAnimator = ObjectAnimator.ofFloat(seaCardView, "translationY", -0f, -50f)
+            moveDownAnimator.duration = 1000
+            val animatorSet = AnimatorSet()
+            animatorSet.playSequentially(moveUpAnimator, moveDownAnimator)
+            animatorSet.start()
+
+        }
+    }
+
+    fun animateShowCard(card: Card) {
+
+        showCard1.visibility = View.VISIBLE
+        if (currentPlayer == player1) {
+            showCard1.setImageResource(card.faceUpImage)
+
+            val moveDownAnimator = ObjectAnimator.ofFloat(showCard1, "translationY", -0f, 800f)
+            val moveRightAnimator = ObjectAnimator.ofFloat(showCard1, "translationX", 0f, 350f)
+            moveDownAnimator.duration = 1000
+            val animatorSet = AnimatorSet()
+            moveRightAnimator.duration = 1000
+            animatorSet.playTogether(moveDownAnimator, moveRightAnimator)
+            animatorSet.start()
 
             Handler(Looper.getMainLooper()).postDelayed({
                 // Code to be executed after 3 seconds
-                goFishText.visibility = View.VISIBLE
-            }, 1500)
-            animateCard()
+                showCard1.visibility = View.GONE
+            }, 1000)
+        } else if (currentPlayer == player2) {
+
+            showCard1.setImageResource(card.faceUpImage)
+            val moveUpAnimator = ObjectAnimator.ofFloat(showCard1, "translationY", 800f, 0f)
+            moveUpAnimator.duration = 1000
+            val moveRightAnimator = ObjectAnimator.ofFloat(showCard1, "translationX", 0f, 350f)
+            moveRightAnimator.duration = 1000
+            val animatorSet = AnimatorSet()
+            animatorSet.playTogether(moveUpAnimator, moveRightAnimator)
+            animatorSet.start()
+            Handler(Looper.getMainLooper()).postDelayed({
+                // Code to be executed after 3 seconds
+                showCard1.visibility = View.GONE
+            }, 1000)
         }
     }
-    fun updateRecyclerView(){
-        cardAdapter1.updateData(player1.hand)
-        cardAdapter2.updateData(player2.hand)
+
+    fun goFish(){
+        val seaCards = listOf(seaCard1,seaCard2,seaCard3,seaCard4, seaCard5,seaCard6,seaCard7,seaCard8,seaCard9,seaCard10)
+
+        if(seaCardsClickable){
+            seaCardsClickable= false
+
+        for(seaCard in seaCards){
+            seaCard.setOnClickListener {
+                for(card in seaCards) {
+                    card.setOnClickListener(null)
+                }
+                var card = carddeck.drawCard()
+                currentPlayer.addCardToHand(card)
+                card.flipCardUp()
+
+                animateGoFish(card)
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    // Code to be executed after 3 seconds
+                    updateRecyclerView()
+                    goFishText.visibility = View.GONE
+
+                }, 1600)
+            }
+
+            }
+        }
     }
-    fun animateCard(){
+    fun animateGoFish(card : Card) {
 
-        val seaCardViews = listOf(
-            seaCard1, seaCard2, seaCard3, seaCard4, seaCard5, seaCard6, seaCard7, seaCard8, seaCard9, seaCard10
-        )
+        showCard1.visibility = View.VISIBLE
+        showCard1.setImageResource(card.faceUpImage)
 
-        for(seaCardView in seaCardViews){
-
-            val moveUpAnimator = ObjectAnimator.ofFloat(seaCardView, "translationY", -50f,0f)
-            moveUpAnimator.duration = 1000
-            val moveDownAnimator = ObjectAnimator.ofFloat(seaCardView, "translationY",-0f,-150f)
-            moveDownAnimator.duration = 1000
+        if (currentPlayer == player1) {
+            val moveDownAnimator = ObjectAnimator.ofFloat(showCard1, "translationY", 200f, 900f)
+            val moveRightAnimator = ObjectAnimator.ofFloat(showCard1, "translationX", 0f, 350f)
+            moveDownAnimator.duration = 1500
             val animatorSet = AnimatorSet()
-            animatorSet.playSequentially(moveUpAnimator,moveDownAnimator)
+            moveRightAnimator.duration = 1000
+            animatorSet.playTogether(moveDownAnimator, moveRightAnimator)
             animatorSet.start()
+            Handler(Looper.getMainLooper()).postDelayed({
+                // Code to be executed after 3 seconds
+                showCard1.visibility = View.GONE
+                goFishText.visibility = View.GONE
+            }, 1500)
+        } else if (currentPlayer==player2) {
+            val moveDownAnimator = ObjectAnimator.ofFloat(showCard1, "translationY", 900f, -100f)
+            val moveRightAnimator = ObjectAnimator.ofFloat(showCard1, "translationX", 0f, 350f)
+            moveDownAnimator.duration = 1500
+            val animatorSet = AnimatorSet()
+            moveRightAnimator.duration = 1000
+            animatorSet.playTogether(moveDownAnimator, moveRightAnimator)
+            animatorSet.start()
+            Handler(Looper.getMainLooper()).postDelayed({
+                // Code to be executed after 3 seconds
+                showCard1.visibility = View.GONE
+                goFishText.visibility = View.GONE
+            }, 1500)
         }
     }
 }
+
 
 
 

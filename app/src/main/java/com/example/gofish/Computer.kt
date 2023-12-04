@@ -6,11 +6,13 @@ import java.util.Random
 class Computer(name: String) : Player(name) {
 
 }
-fun selectCardToChoose(carddeck: Carddeck):Card?{
+fun selectCardToChoose(cardList: List<Card>):Card?{
 
-    val random = Random()
-    val randomCardIndex = random.nextInt(carddeck.cardpile.size)
-    val selectedCard = carddeck.cardpile[randomCardIndex]
-    return selectedCard
+    if(cardList.isNotEmpty()) {
+        val random = Random()
+        val randomCardIndex = random.nextInt(cardList.size)
+        return cardList[randomCardIndex]
+    }
+    return null
+
 }
-
