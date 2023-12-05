@@ -37,6 +37,5 @@ open class Player (val name:String) {
                 return cardList[randomCardIndex]
     }
             return null
-
     }
 }
