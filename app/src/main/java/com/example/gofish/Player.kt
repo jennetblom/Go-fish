@@ -16,8 +16,8 @@ open class Player (val name:String) {
         hand.remove(card)
     }
 
-    fun giveCard(otherPlayer : Player, cardValue : Int): Card?{
-        val card = hand.find { it.value == cardValue }
+    fun giveCard(otherPlayer : Player, card: Card): Card?{
+        val card = hand.find { it.value == card.value }
         if(card!=null){
             removeCardFromHand(card)
             otherPlayer.addCardToHand(card)

@@ -1,5 +1,5 @@
 package com.example.gofish
 
 interface CardClickListener {
-    fun onCardClick(position: Int, cardValue : Int)
+    fun onCardClick( card: Card)
 }

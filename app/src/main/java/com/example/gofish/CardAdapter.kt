@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class CardAdapter(val context: Context,
                   var handCards: MutableList<Card>,
                   val cardClickListener: CardClickListener,
-                  val isClickable: Boolean):
+                  val isClickable: Boolean
+
+):
 RecyclerView.Adapter<CardAdapter.ViewHolder>() {
 
     val layoutInflater = LayoutInflater.from(context)
@@ -40,7 +41,9 @@ RecyclerView.Adapter<CardAdapter.ViewHolder>() {
 
         if(isClickable) {
             holder.cardImage.setOnClickListener {
-                cardClickListener.onCardClick(position, card.value)
+                cardClickListener.onCardClick(card)
+
+                //position, card.value
             }
         }
     }

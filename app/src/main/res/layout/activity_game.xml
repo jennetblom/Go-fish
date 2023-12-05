@@ -160,7 +160,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="36dp"
         android:layout_marginBottom="72dp"
-        android:textAlignment="viewStart"
+        android:textAlignment="center"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/player1container"
@@ -289,5 +289,68 @@
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/redfish2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/homeButton"
+        android:layout_width="50dp"
+        android:layout_height="43dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button2_style"
+        android:text="Home"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/gofishButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/button_style"
+        android:shadowColor="#000000"
+        android:text="Go fish!"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.927"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seaCard8" />
+
+    <TextView
+        android:id="@+id/helpTextView"
+        android:layout_width="153dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="68dp"
+        android:fontFamily="@font/lexend_giga"
+        android:shadowColor="#000000"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        android:shadowRadius="5"
+        android:textAlignment="center"
+        android:textColor="#00FD0A"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.913"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Click on the card you want to ask for" />
+
+    <TextView
+        android:id="@+id/playerTurnTextView"
+        android:layout_width="174dp"
+        android:layout_height="86dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/lexend_giga"
+        android:shadowColor="#000000"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        android:shadowRadius="5"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="#009688"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Player 1's turn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
