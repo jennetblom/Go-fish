@@ -2,6 +2,7 @@ package com.example.gofish
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -66,6 +67,11 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
         initializeViews()
         initializeGame()
 
+        homeButton.setOnClickListener {
+            val intent =  Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+        }
+
 
     }
     fun initializeGame(){
@@ -97,22 +103,31 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
         }
         if(currentPlayer==player2) {
             if (giveClickable) {
-                if(computerCard==null){
-                    computerCard=computerPlayer2Turn()
-                }
+//                if(computerCard==null){
+//                    computerCard=computerPlayer2Turn()
+//                }
                 helpTextView.text = "Click on a card to give"
                 if (card.value == computerCard?.value) {
                     chatBubbleText1.text = "YES"
                     chatBubbleText2.text = "WOWOOHOOHO!"
-                    hasCard(card)
+                    player1.removeCardFromHand(card)
+                    animateGivenCard(card)
+                    player2.addCardToHand(card)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        // Code to be executed after 3 seconds
+                        updateRecyclerView()
+                    }, 1600)
+                    switchPlayers()
+                    switchPlayers()
                 } else if (card.value!=computerCard?.value){
                     chatBubbleText1.textSize=10f
                     chatBubbleText1.text = "No, go fish"
                     helpTextView.text = "Click on the Go Fish-button"
+                    giveClickable=false
                     goFishButtonClick()
                 }
 
-                giveClickable=false
+                //giveClickable=false
             }
         }
     }
@@ -194,11 +209,8 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
         if(carddeck.cardpile.isEmpty()){
             updateScore()
             val winner = checkWhoIsWinner()
-            helpTextView.text = "$winner wins!"
+            helpTextView.text = "${winner.name} wins!"
 
-            homeButton.setOnClickListener {
-                helpTextView.text = "$winner wins wohowhwowhoh"
-            }
             return true
         }
         return false
@@ -221,7 +233,7 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
         if(currentPlayer==player1){
             currentPlayer=player2
            // computerCard=null
-            computerPlayer2Turn()
+            computerCard = computerPlayer2Turn()
             playerTurnTextView.text = "${currentPlayer.name}'s turn"
         }
         else{
@@ -358,9 +370,9 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
         for (seaCardView in seaCardViews) {
 
             val moveUpAnimator = ObjectAnimator.ofFloat(seaCardView, "translationY", -100f, 0f)
-            moveUpAnimator.duration = 1000
+            moveUpAnimator.duration = 500
             val moveDownAnimator = ObjectAnimator.ofFloat(seaCardView, "translationY", -0f, -50f)
-            moveDownAnimator.duration = 1000
+            moveDownAnimator.duration = 500
             val animatorSet = AnimatorSet()
             animatorSet.playSequentially(moveUpAnimator, moveDownAnimator)
             animatorSet.start()
@@ -415,7 +427,7 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
             Handler(Looper.getMainLooper()).postDelayed({
                 // Code to be executed after 3 seconds
                 goFishText.visibility = View.VISIBLE
-            }, 1500)
+            }, 500)
 
             if (seaCardsClickable) {
                 seaCardsClickable = false

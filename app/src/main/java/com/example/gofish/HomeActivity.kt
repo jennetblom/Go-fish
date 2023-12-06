@@ -25,6 +25,10 @@ class HomeActivity : AppCompatActivity() {
             val intent =  Intent(this, GameActivity::class.java)
             startActivity(intent)
         }
+        howButton.setOnClickListener {
+            val intent = Intent(this,RulesActivity::class.java)
+            startActivity(intent)
+        }
 
 
     }

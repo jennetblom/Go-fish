@@ -13,13 +13,7 @@
         android:theme="@style/Theme.GoFish"
         tools:targetApi="31">
         <activity
-            android:name=".RulesActivity"
-            android:exported="false" />
-        <activity
             android:name=".HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".GameActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,6 +21,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".RulesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GameActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="preloaded_fonts"
