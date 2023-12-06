@@ -1,5 +1,7 @@
 package com.example.gofish
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,7 +15,7 @@ class RulesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_rules)
 
         var titleTextView : TextView = findViewById(R.id.theRulesText)
-        var fishRulesText = findViewById<ImageView>(R.id.fishRulesImage)
+        var fishRulesImage = findViewById<ImageView>(R.id.fishRulesImage)
         var rulesTextView1 : TextView = findViewById(R.id.rulesTextView1)
         var rulesTextView2 : TextView = findViewById(R.id.rulesTextView2)
         var rulesTextView3 : TextView = findViewById(R.id.rulesTextView3)

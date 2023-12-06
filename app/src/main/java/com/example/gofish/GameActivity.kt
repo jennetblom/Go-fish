@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -75,9 +76,6 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
 
     }
     fun initializeGame(){
-//        var askClickable : Boolean = true
-//        var giveClickable : Boolean = false
-//        var seaCardsClickable : Boolean = false
         carddeck.shuffleDeck()
         val players = listOf(player1, player2)
         carddeck.dealCardsToPlayers(players)
@@ -95,6 +93,9 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
     }
     override fun onCardClick(card: Card) {
 
+        if(ifGameIsOver()){
+            return
+        }
         if(currentPlayer==player1) {
             if (askClickable) {
                 askPlayerForACard(card)
@@ -103,9 +104,6 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
         }
         if(currentPlayer==player2) {
             if (giveClickable) {
-//                if(computerCard==null){
-//                    computerCard=computerPlayer2Turn()
-//                }
                 helpTextView.text = "Click on a card to give"
                 if (card.value == computerCard?.value) {
                     chatBubbleText1.text = "YES"
@@ -116,9 +114,9 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
                     Handler(Looper.getMainLooper()).postDelayed({
                         // Code to be executed after 3 seconds
                         updateRecyclerView()
+                        switchPlayers()
+                        switchPlayers()
                     }, 1600)
-                    switchPlayers()
-                    switchPlayers()
                 } else if (card.value!=computerCard?.value){
                     chatBubbleText1.textSize=10f
                     chatBubbleText1.text = "No, go fish"
@@ -133,6 +131,7 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
     }
     fun goFishButtonClick(){
 
+        ifGameIsOver()
         goFishButton.isEnabled=true
 
         if(currentPlayer==player2){
@@ -160,17 +159,18 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
             }, 1600)
 
         }
-            //switchPlayers()
         }
     }
 
     fun humanPlayer1turn(){
+        ifGameIsOver()
         chatBubbleText1.textSize = 10f
         askClickable=true
         seaCardsClickable=false
         helpTextView.text = "Choose the card you want to ask for"
     }
     fun computerPlayer2Turn():Card?{
+        ifGameIsOver()
         //player 2 väljer ett random kort som den frågar spelare 1 om
         val randomCard = player2.selectCardToChoose(player2.hand)
         chatBubbleText1.textSize = 24f
@@ -206,10 +206,25 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
 
     fun ifGameIsOver() : Boolean {
 
-        if(carddeck.cardpile.isEmpty()){
+        if(carddeck.cardpile.isEmpty()||player1.hand.isEmpty()||player2.hand.isEmpty()){
             updateScore()
             val winner = checkWhoIsWinner()
             helpTextView.text = "${winner.name} wins!"
+            goFishButton.visibility=View.GONE
+            goFishText.visibility = View.VISIBLE
+            goFishText.text = "${winner.name} wins!"
+            if(winner==player1)
+            {
+                chatBubbleText2.text = "Good job!"
+                chatBubbleText1.textSize = 12f
+                chatBubbleText1.text = "Thank you :D"
+            }
+            else{
+                chatBubbleText2.text = "Thank you :) "
+                chatBubbleText1.textSize = 12f
+                chatBubbleText1.text = "Good job"
+            }
+
 
             return true
         }
@@ -228,12 +243,14 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
 
         fillPlayerHands()
         ifGameIsOver()
+        placeCardsInSea()
         updateScore()
 
         if(currentPlayer==player1){
             currentPlayer=player2
            // computerCard=null
             computerCard = computerPlayer2Turn()
+            Log.d("!!!","computerCard : ${computerCard?.value}")
             playerTurnTextView.text = "${currentPlayer.name}'s turn"
         }
         else{
@@ -289,7 +306,6 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
 
     fun askPlayerForACard(card: Card) {
 
-
         chatBubble1.setImageResource(R.drawable.chaticon4)
         chatBubble2.setImageResource(R.drawable.chaticon4)
         chatBubble1.visibility = View.VISIBLE
@@ -305,6 +321,7 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
         askingPlayerText.text = "Do you have ${card.value}?"
         fillPlayerHands()
         ifGameIsOver()
+        placeCardsInSea()
     }
     fun answerOtherPlayer(card: Card) : Boolean {
 

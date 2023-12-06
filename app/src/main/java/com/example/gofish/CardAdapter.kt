@@ -42,8 +42,6 @@ RecyclerView.Adapter<CardAdapter.ViewHolder>() {
         if(isClickable) {
             holder.cardImage.setOnClickListener {
                 cardClickListener.onCardClick(card)
-
-                //position, card.value
             }
         }
     }
