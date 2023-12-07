@@ -24,6 +24,7 @@ class HomeActivity : AppCompatActivity() {
         val fishImage = findViewById<ImageView>(R.id.fishImage)
         val howButton = findViewById<Button>(R.id.howButton)
         val playButton = findViewById<Button>(R.id.playButton)
+        val animation = Animations()
 
 
         playButton.setOnClickListener {
@@ -36,23 +37,9 @@ class HomeActivity : AppCompatActivity() {
         }
 
         fishImage.setOnClickListener {
-            val moveDownAnimator = ObjectAnimator.ofFloat(fishImage, "translationY", -0f, 700f)
-            moveDownAnimator.duration = 2000
-            val moveUpAnimator = ObjectAnimator.ofFloat(fishImage, "translationY", 500f, 300f)
-            moveUpAnimator.duration = 1000
-            val moveLeftAnimator = ObjectAnimator.ofFloat(fishImage, "translationX", 0f,-400f)
-            moveLeftAnimator.duration=1000
-            val bigXAnimator= ObjectAnimator.ofFloat(fishImage,"scaleX",1.0f,3.0f)
-            val bigYAnimator= ObjectAnimator.ofFloat(fishImage,"scaleY",1.0f,3.0f)
-            bigXAnimator.duration=2000
-            bigYAnimator.duration=2000
-            val animatorSet = AnimatorSet()
-            val animatorSet2 = AnimatorSet()
-            fishImage.setImageResource(R.drawable.redfish2)
-            animatorSet.playTogether(moveDownAnimator,moveUpAnimator,moveLeftAnimator,moveUpAnimator)
-            animatorSet2.playTogether(bigXAnimator,bigYAnimator)
-            animatorSet.start()
-            animatorSet2.start()
+
+            animation.fishAnimation(fishImage)
+
         }
 
 
