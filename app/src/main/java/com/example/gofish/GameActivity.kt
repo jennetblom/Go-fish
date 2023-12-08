@@ -101,6 +101,8 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
         if(currentPlayer==player1) {
             if (askClickable) {
                 askPlayerForACard(card)
+                //Askclickable is true, if the computer player has the card requested.
+                // If that's the case, the human can ask for a card again
                 askClickable = answerOtherPlayer(card)
             }
         }
@@ -118,6 +120,7 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
                     Handler(Looper.getMainLooper()).postDelayed({
                         // Code to be executed after 3 seconds
                         updateRecyclerView()
+                        //If the human has the card computer asks for. It's the computer's turn to ask again
                         switchPlayers()
                         switchPlayers()
                     }, 1600)
