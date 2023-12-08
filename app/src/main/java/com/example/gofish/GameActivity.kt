@@ -93,16 +93,18 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
         }
     }
     override fun onCardClick(card: Card) {
-
+        //A function for when human player click on their cards
         if(ifGameIsOver()){
             return
         }
+        //If if's the human's turn
         if(currentPlayer==player1) {
             if (askClickable) {
                 askPlayerForACard(card)
                 askClickable = answerOtherPlayer(card)
             }
         }
+        //If it's the computer player's turn
         if(currentPlayer==player2) {
             if (giveClickable) {
 
@@ -175,6 +177,7 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
         return hasCard
     }
     fun goFish(){
+        //A method for when the player has  to pick a card from the sea
         val seaCards = listOf(seaCard1,seaCard2,seaCard3,seaCard4, seaCard5,seaCard6,seaCard7,seaCard8,seaCard9,seaCard10)
 
 
@@ -393,6 +396,7 @@ class GameActivity : AppCompatActivity() , CardClickListener  {
         cardAdapter2.notifyDataSetChanged()
     }
     fun hasCard(clickedCard: Card){
+        //A method for when the computer player has the card the human asks for.
         var givenCard = otherPlayer.giveCard(currentPlayer, clickedCard)
         if (givenCard != null) {
             animateGivenCard(givenCard)
